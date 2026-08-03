@@ -20,6 +20,7 @@ export const profile = {
   phone: '+855 67 407 884',
   availability: 'Open to freelance & full-time roles',
   image: 'https://i.pravatar.cc/480?img=11',
+  // Set this to your CV file in the public folder. Example: '/cv.pdf' or '/my-resume.pdf'
   cv: '/cv.pdf',
   yearsExperience: 5,
   projectsCompleted: 85,
@@ -93,12 +94,12 @@ export const projects = [
     demo: 'http://54.227.112.85/login',
   },
   {
-    title: 'TaskFlow — Project Management',
+    title: 'The The-Skincare-E-commerce',
     description:
-      'Kanban-style task manager with drag-and-drop boards, real-time collaboration and notifications.',
-    stack: ['React', 'Redux', 'Express', 'MongoDB'],
-    image: 'https://picsum.photos/seed/taskflow/640/420',
-    github: 'https://github.com/vichekas/taskflow',
+      'The The-Skincare-E-commerce is an online skincare store that offers a wide range of skincare products for all skin types.',
+    stack: ['React', 'Tailwind'],
+    image: 'https://i.pinimg.com/1200x/f6/c7/30/f6c730f6b018d3cf11900af96f846452.jpg',
+    github: 'https://github.com/soengvicheka/The-Skincare-E-commerce.git',
     demo: 'https://example.com/taskflow',
   },
   {
