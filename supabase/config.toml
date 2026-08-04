@@ -1,0 +1,11 @@
+# Supabase CLI configuration for this project.
+# Set project_id to your Supabase project ref (Dashboard → Settings → General).
+# You can also run `supabase link --project-ref <your-ref>` to set it.
+
+project_id = "your-project-ref"
+
+[functions.upload-asset]
+# The function does its own admin-key check, so it must be reachable without
+# a Supabase auth JWT. If verify_jwt stays true, the browser call gets a 401
+# before our handler runs.
+verify_jwt = false

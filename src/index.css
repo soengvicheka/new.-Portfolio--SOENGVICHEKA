@@ -72,6 +72,14 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Khmer mode — use a font with full Khmer glyph support. */
+html[lang='km'] body {
+  font-family: 'Noto Sans Khmer', var(--font-sans);
+}
+html[lang='km'] .font-display {
+  font-family: 'Noto Sans Khmer', var(--font-display);
+}
+
 ::selection {
   @apply bg-indigo-500/90 text-white;
 }

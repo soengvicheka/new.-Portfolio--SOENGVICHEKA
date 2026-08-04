@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react'
-import { useProfilePhoto } from '../hooks/useProfilePhoto'
+import { useProfileCv } from '../hooks/useProfileCv'
 import { useLanguage } from '../hooks/useLanguage'
 import { Icon } from './Icons'
 
 /**
- * Reusable camera button + hidden file input for updating the profile photo.
- * Calls `onSaved` after a photo is successfully stored.
+ * Reusable upload button + hidden file input for replacing the CV.
+ * Calls `onSaved` after a PDF is successfully stored, or `onError(message)`
+ * when the file is rejected (wrong type / too large).
  */
-export default function ChangePhotoButton({ className = '', onSaved, onError }) {
-  const { updateFromFile } = useProfilePhoto()
+export default function ChangeCvButton({ className = '', onSaved, onError }) {
+  const { updateFromFile } = useProfileCv()
   const { t } = useLanguage()
   const fileInputRef = useRef(null)
   const [busy, setBusy] = useState(false)
@@ -21,7 +22,7 @@ export default function ChangePhotoButton({ className = '', onSaved, onError }) 
       await updateFromFile(file)
       onSaved?.()
     } catch (err) {
-      onError?.(err?.message || t.photoErrors.server)
+      onError?.(err?.message || t.cvErrors.generic)
     } finally {
       setBusy(false)
       e.target.value = ''
@@ -33,20 +34,20 @@ export default function ChangePhotoButton({ className = '', onSaved, onError }) 
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        aria-label={t.hero.changePhoto}
-        title={t.hero.changePhoto}
+        aria-label={t.about.uploadCv}
+        title={t.about.uploadCv}
         className={className}
       >
         {busy ? (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
         ) : (
-          <Icon name="camera" className="h-4 w-4" />
+          <Icon name="upload" className="h-4 w-4" />
         )}
       </button>
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept=".pdf,application/pdf"
         className="hidden"
         onChange={handleFileChange}
       />

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { navLinks } from '../data'
 import { useTheme } from '../hooks/useTheme'
+import { useLanguage } from '../hooks/useLanguage'
 import { Icon } from './Icons'
 
 export default function Navbar() {
   const { theme, toggle } = useTheme()
+  const { lang, toggle: toggleLang, t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('#home')
   const [open, setOpen] = useState(false)
@@ -40,7 +42,7 @@ export default function Navbar() {
     >
       <nav
         className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8"
-        aria-label="Main navigation"
+        aria-label={t.nav.mainNav}
       >
         {/* Logo */}
         <a href="#home" className="group flex items-center gap-2.5" onClick={handleNavClick}>
@@ -64,7 +66,7 @@ export default function Navbar() {
                     : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                 }`}
               >
-                {link.label}
+                {t.nav[link.href.slice(1)]}
                 {active === link.href && (
                   <span className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" />
                 )}
@@ -75,10 +77,21 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Language toggle */}
+          <button
+            type="button"
+            onClick={toggleLang}
+            aria-label={t.nav.switchLang}
+            title={t.nav.switchLang}
+            className="flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 font-display text-sm font-bold text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
+          >
+            {lang === 'en' ? 'EN' : 'ខ្មែរ'}
+          </button>
+
           <button
             type="button"
             onClick={toggle}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={theme === 'dark' ? t.nav.switchThemeLight : t.nav.switchTheme}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
           >
             {theme === 'dark' ? <Icon name="sun" className="h-[18px] w-[18px]" /> : <Icon name="moon" className="h-[18px] w-[18px]" />}
@@ -88,14 +101,14 @@ export default function Navbar() {
             href="#contact"
             className="hidden rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30 sm:inline-flex"
           >
-            Hire Me
+            {t.nav.hireMe}
           </a>
 
           {/* Mobile toggle */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
             aria-expanded={open}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 lg:hidden"
           >
@@ -122,7 +135,7 @@ export default function Navbar() {
                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5'
                 }`}
               >
-                {link.label}
+                {t.nav[link.href.slice(1)]}
               </a>
             </li>
           ))}
@@ -132,7 +145,7 @@ export default function Navbar() {
               onClick={handleNavClick}
               className="block rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-2.5 text-center text-sm font-semibold text-white"
             >
-              Hire Me
+              {t.nav.hireMe}
             </a>
           </li>
         </ul>

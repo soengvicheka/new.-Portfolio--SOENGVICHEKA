@@ -1,19 +1,30 @@
 import { useState } from 'react'
 import { profile, socials } from '../data'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
+import { useIsOwner } from '../hooks/useIsOwner'
+import { useLanguage } from '../hooks/useLanguage'
 import Avatar from './Avatar'
 import ChangePhotoButton from './ChangePhotoButton'
+import DownloadCvButton from './DownloadCvButton'
 import Typewriter from './Typewriter'
 import { Icon } from './Icons'
 
 export default function Hero() {
   const { photo, clear } = useProfilePhoto()
-  const profilePhoto = photo || profile.image
+  const isOwner = useIsOwner()
+  const { t } = useLanguage()
+  const profilePhoto = photo?.url || profile.image
   const [flash, setFlash] = useState(false)
+  const [photoError, setPhotoError] = useState(null)
 
   const showSaved = () => {
     setFlash(true)
     setTimeout(() => setFlash(false), 2600)
+  }
+
+  const showPhotoError = (message) => {
+    setPhotoError(message)
+    setTimeout(() => setPhotoError(null), 3600)
   }
 
   // Role cards under the photo — driven by profile.roles in src/data.js
@@ -50,14 +61,14 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            Available for work
+            {t.hero.available}
           </div>
 
           <h1
             className="mt-6 animate-fade-up font-display text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl xl:text-6xl dark:text-white"
             style={{ animationDelay: '80ms' }}
           >
-            Hi, I'm{' '}
+            {t.hero.hi}{' '}
             <span className="text-gradient">{profile.name}</span>
           </h1>
 
@@ -65,14 +76,14 @@ export default function Hero() {
             className="mt-4 animate-fade-up font-display text-xl font-semibold text-slate-700 sm:text-2xl dark:text-slate-200"
             style={{ animationDelay: '160ms' }}
           >
-            <Typewriter words={profile.roles} />
+            <Typewriter words={t.hero.roles} />
           </p>
 
           <p
             className="mt-5 max-w-xl animate-fade-up text-base leading-relaxed text-slate-600 dark:text-slate-400"
             style={{ animationDelay: '240ms' }}
           >
-            {profile.tagline}
+            {t.hero.tagline}
           </p>
 
           {/* CTAs */}
@@ -84,31 +95,24 @@ export default function Hero() {
               href="#projects"
               className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
             >
-              View My Work
+              {t.hero.viewWork}
               <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-600 dark:border-white/15 dark:text-slate-200 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300"
             >
-              Let's Talk
+              {t.hero.letsTalk}
               <Icon name="send" className="h-4 w-4" />
             </a>
-            <a
-              href={profile.cv}
-              download="Vicheka-Soeng-CV.pdf"
-              className="inline-flex items-center gap-2 rounded-xl border border-indigo-500/30 bg-indigo-500/5 px-5 py-3 text-sm font-semibold text-indigo-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-indigo-500/10 dark:text-indigo-300"
-            >
-              <Icon name="download" className="h-4 w-4" />
-              Download CV
-            </a>
+            <DownloadCvButton />
           </div>
 
           {/* Socials + quick stats */}
           <div className="mt-10 animate-fade-up border-t border-slate-200 pt-6 dark:border-white/10" style={{ animationDelay: '400ms' }}>
             <div className="flex items-center gap-3">
               <span className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                Find me on
+                {t.hero.findMeOn}
               </span>
               <span className="h-px w-8 bg-slate-200 dark:bg-white/10" />
               <div className="flex items-center gap-2">
@@ -130,9 +134,9 @@ export default function Hero() {
 
             <dl className="mt-6 grid grid-cols-3 gap-4">
               {[
-                { value: `${profile.yearsExperience}+`, label: 'Years Experience' },
-                { value: `${profile.projectsCompleted}+`, label: 'Projects Done' },
-                { value: `${profile.happyClients}+`, label: 'Happy Clients' },
+                { value: `${profile.yearsExperience}+`, label: t.hero.yearsExp },
+                { value: `${profile.projectsCompleted}+`, label: t.hero.projectsDone },
+                { value: `${profile.happyClients}+`, label: t.hero.happyClients },
               ].map((item) => (
                 <div key={item.label}>
                   <dt className="sr-only">{item.label}</dt>
@@ -156,7 +160,7 @@ export default function Hero() {
             <div className="relative rounded-[1.85rem] bg-white p-2 dark:bg-slate-900">
               <Avatar
                 src={profilePhoto}
-                alt={`Portrait of ${profile.name}`}
+                alt={`${t.hero.portraitOf} ${profile.name}`}
                 initials={profile.name
                   .split(' ')
                   .map((n) => n[0])
@@ -164,38 +168,50 @@ export default function Hero() {
                 className="aspect-[4/4.4] w-full rounded-[1.6rem]"
               />
 
-              {/* Photo controls */}
-              <div className="absolute right-4 top-4 flex items-center gap-2">
-                {photo && (
-                  <button
-                    type="button"
-                    onClick={clear}
-                    aria-label="Reset to the default photo"
-                    title="Reset to default photo"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:text-red-500 dark:bg-slate-900/90 dark:text-slate-300"
-                  >
-                    <Icon name="close" className="h-4 w-4" />
-                  </button>
-                )}
-                <ChangePhotoButton
-                  onSaved={showSaved}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/40 transition-all duration-200 hover:scale-105"
-                />
-              </div>
+              {/* Photo controls — owner only */}
+              {isOwner && (
+                <div className="absolute right-4 top-4 flex items-center gap-2">
+                  {photo?.exists && (
+                    <button
+                      type="button"
+                      onClick={clear}
+                      aria-label={t.hero.resetPhoto}
+                      title={t.hero.resetPhoto}
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-600 shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:text-red-500 dark:bg-slate-900/90 dark:text-slate-300"
+                    >
+                      <Icon name="close" className="h-4 w-4" />
+                    </button>
+                  )}
+                  <ChangePhotoButton
+                    onSaved={showSaved}
+                    onError={showPhotoError}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/40 transition-all duration-200 hover:scale-105"
+                  />
+                </div>
+              )}
 
               {/* Helper hint / saved feedback */}
-              {flash && (
+              {isOwner && flash && (
                 <p
                   role="status"
                   className="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-slate-950/70 px-3.5 py-1.5 text-[11px] font-semibold text-white backdrop-blur"
                 >
                   <Icon name="check" className="h-3.5 w-3.5 text-emerald-400" />
-                  Photo saved!
+                  {t.hero.photoSaved}
                 </p>
               )}
-              {!photo && !flash && (
+              {isOwner && photoError && (
+                <p
+                  role="alert"
+                  className="pointer-events-none absolute bottom-6 left-1/2 flex max-w-[90%] -translate-x-1/2 items-center gap-1.5 rounded-full bg-rose-500/90 px-3.5 py-1.5 text-center text-[11px] font-semibold text-white shadow-lg backdrop-blur"
+                >
+                  <Icon name="close" className="h-3.5 w-3.5 shrink-0" />
+                  {photoError}
+                </p>
+              )}
+              {isOwner && !photo?.exists && !flash && !photoError && (
                 <p className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-slate-950/55 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur">
-                  Click the camera to add your photo
+                  {t.hero.cameraHint}
                 </p>
               )}
             </div>
@@ -222,7 +238,7 @@ export default function Hero() {
               </span>
               <div>
                 <p className="text-xs font-bold text-slate-900 dark:text-white">React.js</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Frontend</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.hero.frontend}</p>
               </div>
             </div>
           </div>
@@ -233,8 +249,8 @@ export default function Hero() {
                 <Icon name="briefcase" className="h-5 w-5" />
               </span>
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">{profile.yearsExperience}+ Years</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Experience</p>
+                <p className="text-xs font-bold text-slate-900 dark:text-white">{profile.yearsExperience}+ {t.hero.years}</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.hero.experience}</p>
               </div>
             </div>
           </div>
@@ -246,7 +262,7 @@ export default function Hero() {
       {/* Scroll hint */}
       <div className="mt-16 hidden justify-center lg:flex" aria-hidden="true">
         <a href="#about" className="group flex flex-col items-center gap-2 text-slate-400 transition-colors hover:text-indigo-500 dark:text-slate-500">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.25em]">Scroll</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em]">{t.hero.scroll}</span>
           <span className="flex h-9 w-5.5 items-start justify-center rounded-full border-2 border-current p-1">
             <span className="h-2 w-1 animate-bounce rounded-full bg-current" />
           </span>

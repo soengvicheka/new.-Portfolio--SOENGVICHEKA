@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useLanguage } from '../hooks/useLanguage'
 import { Icon } from './Icons'
 
 export default function BackToTop() {
+  const { t } = useLanguage()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function BackToTop() {
     <button
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      aria-label="Back to top"
+      aria-label={t.backToTop}
       className="group fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white shadow-xl shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/40"
     >
       <Icon name="arrow-up" className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5" />

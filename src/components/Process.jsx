@@ -1,20 +1,30 @@
 import { process } from '../data'
+import { useLanguage } from '../hooks/useLanguage'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 import { Icon } from './Icons'
 
 export default function Process() {
+  const { t, isKm } = useLanguage()
+
+  const steps = process.map((step, index) => ({
+    ...step,
+    title: isKm ? t.process.titles[index] : step.title,
+    description: isKm ? t.process.descriptions[index] : step.description,
+  }))
+
   return (
     <section id="process" className="scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Work Process"
+          eyebrow={t.process.eyebrow}
           title={
             <>
-              How I <span className="text-gradient">bring ideas to life</span>
+              {t.process.title.before}
+              <span className="text-gradient">{t.process.title.highlight}</span>
             </>
           }
-          description="A clear, collaborative process that keeps you informed at every step — from first idea to final launch."
+          description={t.process.description}
         />
 
         <div className="relative mx-auto mt-16 max-w-3xl">
@@ -25,7 +35,7 @@ export default function Process() {
           />
 
           <div className="space-y-10 lg:space-y-12">
-            {process.map((step, index) => {
+            {steps.map((step, index) => {
               const isLeft = index % 2 === 0
               return (
                 <Reveal key={step.title} delay={index * 60}>

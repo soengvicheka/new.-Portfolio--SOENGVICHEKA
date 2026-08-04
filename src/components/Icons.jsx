@@ -30,6 +30,19 @@ const stroke = {
       <line x1="12" y1="15" x2="12" y2="3" />
     </>
   ),
+  upload: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </>
+  ),
+  file: (
+    <>
+      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+      <polyline points="13 2 13 9 20 9" />
+    </>
+  ),
   'arrow-up': (
     <>
       <line x1="12" y1="19" x2="12" y2="5" />
@@ -109,6 +122,7 @@ const stroke = {
   moon: <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />,
   'chevron-left': <polyline points="15 18 9 12 15 6" />,
   'chevron-right': <polyline points="9 18 15 12 9 6" />,
+  'chevron-down': <polyline points="6 9 12 15 18 9" />,
   send: (
     <>
       <line x1="22" y1="2" x2="11" y2="13" />

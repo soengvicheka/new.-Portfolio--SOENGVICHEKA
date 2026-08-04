@@ -1,4 +1,6 @@
+import { LanguageProvider } from './hooks/useLanguage'
 import { ProfilePhotoProvider } from './hooks/useProfilePhoto'
+import { ProfileCvProvider } from './hooks/useProfileCv'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -11,20 +13,24 @@ import BackToTop from './components/BackToTop'
 
 export default function App() {
   return (
-    <ProfilePhotoProvider>
-      <div className="min-h-screen">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Process />
-          <Contact />
-        </main>
-        <Footer />
-        <BackToTop />
-      </div>
-    </ProfilePhotoProvider>
+    <LanguageProvider>
+      <ProfilePhotoProvider>
+        <ProfileCvProvider>
+          <div className="min-h-screen">
+            <Navbar />
+            <main>
+              <Hero />
+              <About />
+              <Skills />
+              <Projects />
+              <Process />
+              <Contact />
+            </main>
+            <Footer />
+            <BackToTop />
+          </div>
+        </ProfileCvProvider>
+      </ProfilePhotoProvider>
+    </LanguageProvider>
   )
 }

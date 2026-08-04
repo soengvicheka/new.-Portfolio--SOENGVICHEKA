@@ -1,31 +1,41 @@
 import { projects } from '../data'
+import { useLanguage } from '../hooks/useLanguage'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 import { Icon } from './Icons'
 
 export default function Projects() {
+  const { t, isKm } = useLanguage()
+
+  const visibleProjects = projects.map((project, index) => ({
+    ...project,
+    title: isKm ? t.projects.titles[index] : project.title,
+    description: isKm ? t.projects.descriptions[index] : project.description,
+  }))
+
   return (
     <section id="projects" className="scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Portfolio"
+          eyebrow={t.projects.eyebrow}
           title={
             <>
-              Featured <span className="text-gradient">projects</span>
+              {t.projects.title.before}
+              <span className="text-gradient">{t.projects.title.highlight}</span>
             </>
           }
-          description="A selection of things I've designed and built recently. Every project solves a real problem with clean, thoughtful engineering."
+          description={t.projects.description}
         />
 
         <div className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
+          {visibleProjects.map((project, index) => (
             <Reveal key={project.title} delay={(index % 3) * 90}>
               <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-slate-900">
                 {/* Image */}
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
                     src={project.image}
-                    alt={`Screenshot of ${project.title}`}
+                    alt={`${t.projects.screenshotOf} ${project.title}`}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -33,25 +43,27 @@ export default function Projects() {
 
                   {/* Quick links on hover */}
                   <div className="absolute inset-x-0 bottom-0 flex translate-y-4 items-center justify-center gap-3 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${project.title} on GitHub`}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3.5 py-2 text-xs font-semibold text-slate-900 shadow-lg backdrop-blur transition-transform hover:scale-105"
-                    >
-                      <Icon name="github" className="h-3.5 w-3.5" />
-                      Code
-                    </a>
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} ${t.projects.onGithub}`}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3.5 py-2 text-xs font-semibold text-slate-900 shadow-lg backdrop-blur transition-transform hover:scale-105"
+                      >
+                        <Icon name="github" className="h-3.5 w-3.5" />
+                        {t.projects.code}
+                      </a>
+                    )}
                     <a
                       href={project.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Live demo of ${project.title}`}
+                      aria-label={`${t.projects.liveDemoOf} ${project.title}`}
                       className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-400 px-3.5 py-2 text-xs font-semibold text-white shadow-lg transition-transform hover:scale-105"
                     >
                       <Icon name="external" className="h-3.5 w-3.5" />
-                      Live Demo
+                      {t.projects.liveDemo}
                     </a>
                   </div>
                 </div>
@@ -89,7 +101,7 @@ export default function Projects() {
             className="group inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-600 dark:border-white/15 dark:text-slate-200 dark:hover:text-indigo-300"
           >
             <Icon name="github" className="h-4 w-4" />
-            See more on GitHub
+            {t.projects.seeMore}
             <Icon name="arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </a>
         </Reveal>

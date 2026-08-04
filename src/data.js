@@ -2,6 +2,19 @@
 //  Central content file — edit everything about the portfolio right here.
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+//  Owner-only CV upload secret
+//  -----------------------------
+//  Only you should know this key. Visit your site with it in the URL to unlock
+//  the CV & photo upload controls:
+//      https://your-site.com/?key=YOUR_SECRET
+//  Visitors without the key only see a plain "Download CV" button.
+//  IMPORTANT: change this to your own secret phrase before deploying, and keep
+//  it in sync with the ADMIN_KEY secret on your Supabase project
+//  (see CV_UPLOAD_SETUP.md).
+// ---------------------------------------------------------------------------
+export const adminKey = 'vicheka-cv-2026'
+
 export const profile = {
   name: 'Vicheka Soeng',
   firstName: 'Vicheka',
@@ -15,16 +28,16 @@ export const profile = {
     'My journey started with a curiosity for how the web works, and grew into a career building products used by real people every day. Over the years I have shipped e-commerce platforms, real-time dashboards, booking systems and more — always with a focus on performance, accessibility and clean code.',
     "When I am not coding, you will find me exploring new frameworks, writing about what I learn, or enjoying a good cup of coffee while sketching out my next project. I believe great software comes from great collaboration, so I always keep communication and transparency at the heart of my workflow.",
   ],
-  location: 'Phnom Penh, Cambodia',
+  location: 'BP 511, Phum Tropeang Chhuk (Borey Sorla) Sangtak, Street 371, Phnom Penh',
   email: 'soengvicheka775@gmail.com',
   phone: '+855 67 407 884',
   availability: 'Open to freelance & full-time roles',
   image: 'https://i.pravatar.cc/480?img=11',
-  // Set this to your CV file in the public folder. Example: '/cv.pdf' or '/my-resume.pdf'
   cv: '/cv.pdf',
-  yearsExperience: 5,
-  projectsCompleted: 85,
-  happyClients: 40,
+  cvFileName: 'Vicheka-Soeng-CV.pdf',
+  yearsExperience: 2,
+  projectsCompleted: 6,
+  // happyClients: 40,
 }
 
 export const navLinks = [
@@ -37,20 +50,20 @@ export const navLinks = [
 ]
 
 export const socials = [
-  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/vichekas', icon: 'linkedin' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/soeng-vicheka', icon: 'linkedin' },
 ]
 
 
 export const hardSkills = [
-  { name: 'HTML', level: 95 },
-  { name: 'CSS', level: 93 },
-  { name: 'JavaScript', level: 92 },
-  { name: 'Vue.js', level: 88 },
-  { name: 'MS Office', level: 90 },
+  { name: 'HTML', level: 90 },
+  { name: 'CSS', level: 90 },
+  { name: 'JavaScript', level: 70},
+  { name: 'Vue.js', level: 70 },
+  { name: 'MS Office', level: 90},
   { name: 'Figma', level: 85 },
-  { name: 'Laravel', level: 85 },
-  { name: 'GitHub', level: 82 },
-  { name: 'TypeScript', level: 82 },
+  { name: 'Laravel', level: 70 },
+  { name: 'GitHub', level: 80 },
+  { name: 'TypeScript', level: 70},
   { name: 'MySQL', level: 80 },
   { name: 'Postman', level: 78 },
   { name: 'Photoshop (Basic)', level: 55 },
@@ -90,7 +103,7 @@ export const projects = [
       'The PNC Education System is an internal web-based application that helps the Education Team manage the entire student lifecycle in one centralized platform, including enrollment, student profiles, ID card issuance, record management, and self-evaluation.',
     stack: ['Laravel', 'Vue.js', 'MySql'],
     image: 'https://i.pinimg.com/1200x/63/54/0d/63540d3056c21bdb9c62ef085f0e198d.jpg',
-    github: 'https://github.com/pnc-education-system/pnc-education-system.git' & 'https://github.com/pnc-education-system/pnc-education-system-api.git',
+    github: 'https://github.com/pnc-education-system/pnc-education-system.git',
     demo: 'http://54.227.112.85/login',
   },
   {
@@ -100,25 +113,7 @@ export const projects = [
     stack: ['React', 'Tailwind'],
     image: 'https://i.pinimg.com/1200x/f6/c7/30/f6c730f6b018d3cf11900af96f846452.jpg',
     github: 'https://github.com/soengvicheka/The-Skincare-E-commerce.git',
-    demo: 'https://example.com/taskflow',
-  },
-  {
-    title: 'DevBlog — Content Platform',
-    description:
-      'A blazing-fast blog engine with Markdown support, syntax highlighting and full-text search.',
-    stack: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
-    image: 'https://picsum.photos/seed/devblog/640/420',
-    github: 'https://github.com/vichekas/devblog',
-    demo: 'https://example.com/devblog',
-  },
-  {
-    title: 'FitTrack — Fitness Companion',
-    description:
-      'Workout tracker with progress charts, goal streaks and an offline-first progressive web app.',
-    stack: ['React', 'Vite', 'IndexedDB', 'Chart.js'],
-    image: 'https://picsum.photos/seed/fittrack/640/420',
-    github: 'https://github.com/vichekas/fittrack',
-    demo: 'https://example.com/fittrack',
+    demo: 'https://the-skincare-e-commerce.vercel.app',
   },
 ]
 
@@ -160,4 +155,3 @@ export const process = [
       'Smooth launch with monitoring and support, plus a solid handover so you own everything.',
   },
 ]
-

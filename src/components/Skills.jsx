@@ -1,15 +1,33 @@
 import { hardSkills, softSkills } from '../data'
 import { useInView } from '../hooks/useInView'
+import { useLanguage } from '../hooks/useLanguage'
 import { Icon } from './Icons'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 
+// Khmer names for hard skills that contain translatable words (proper nouns stay as-is).
+const HARD_SKILL_NAMES_KM = {
+  'Photoshop (Basic)': 'Photoshop (មូលដ្ឋាន)',
+}
+
+// Khmer names for the soft skills, index-aligned with softSkills in data.js.
+const SOFT_SKILL_NAMES_KM = [
+  'ការគ្រប់គ្រងគម្រោង',
+  'ការងារជាក្រុម និងកិច្ចសហការ',
+  'ការដោះស្រាយបញ្ហា',
+  'ការសម្របខ្លួន',
+  'ការទំនាក់ទំនង',
+  'ការគ្រប់គ្រងពេលវេលា / កិច្ចការ',
+]
+
 function SkillBar({ skill, index, started }) {
+  const { isKm } = useLanguage()
+  const name = isKm ? HARD_SKILL_NAMES_KM[skill.name] || skill.name : skill.name
   return (
     <Reveal delay={index * 70}>
       <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400/40 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">{skill.name}</h3>
+          <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">{name}</h3>
           <span className="rounded-lg bg-indigo-500/10 px-2 py-0.5 font-display text-xs font-bold text-indigo-600 dark:text-indigo-300">
             {skill.level}%
           </span>
@@ -44,23 +62,25 @@ function SubHeading({ icon, title, subtitle }) {
 
 export default function Skills() {
   const { ref, inView } = useInView({ threshold: 0.2 })
+  const { t, isKm } = useLanguage()
 
   return (
     <section id="skills" className="scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeading
-          eyebrow="My Skills"
+          eyebrow={t.skills.eyebrow}
           title={
             <>
-              Skills & <span className="text-gradient">expertise</span>
+              {t.skills.title.before}
+              <span className="text-gradient">{t.skills.title.highlight}</span>
             </>
           }
-          description="The technologies I master and the strengths I bring to every project."
+          description={t.skills.description}
         />
 
         {/* Hard skills */}
         <div ref={ref} className="mt-14">
-          <SubHeading icon="code" title="Hard Skills" subtitle="Technical tools & technologies" />
+          <SubHeading icon="code" title={t.skills.hardTitle} subtitle={t.skills.hardSubtitle} />
           <div className="grid gap-5 sm:grid-cols-2">
             {hardSkills.map((skill, index) => (
               <SkillBar key={skill.name} skill={skill} index={index} started={inView} />
@@ -70,7 +90,7 @@ export default function Skills() {
 
         {/* Soft skills */}
         <div className="mt-14">
-          <SubHeading icon="heart" title="Soft Skills" subtitle="How I work with teams and clients" />
+          <SubHeading icon="heart" title={t.skills.softTitle} subtitle={t.skills.softSubtitle} />
           <div className="flex flex-wrap gap-3">
             {softSkills.map((skill, index) => (
               <Reveal key={skill.name} delay={index * 60}>
@@ -79,7 +99,7 @@ export default function Skills() {
                     <Icon name={skill.icon} className="h-4 w-4" />
                   </span>
                   <span className="font-display text-sm font-semibold text-slate-800 dark:text-slate-200">
-                    {skill.name}
+                    {isKm ? SOFT_SKILL_NAMES_KM[index] : skill.name}
                   </span>
                 </div>
               </Reveal>
@@ -89,8 +109,9 @@ export default function Skills() {
 
         <Reveal delay={150} className="mt-12 text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Always learning — currently exploring{' '}
-            <span className="font-semibold text-indigo-500 dark:text-indigo-300">GraphQL</span> and{' '}
+            {t.skills.learning}{' '}
+            <span className="font-semibold text-indigo-500 dark:text-indigo-300">GraphQL</span>{' '}
+            {t.skills.and}{' '}
             <span className="font-semibold text-indigo-500 dark:text-indigo-300">Docker</span>.
           </p>
         </Reveal>
