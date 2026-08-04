@@ -298,7 +298,7 @@ export default function Contact() {
               </button>
 
               <p className="mt-4 text-xs text-slate-400 dark:text-slate-500">
-                This demo simulates sending. Wire the form to Formspree, EmailJS or your API when you go live.
+                Messages are delivered straight to my Telegram — I'll reply within 24 hours.
               </p>
             </form>
           </Reveal>
