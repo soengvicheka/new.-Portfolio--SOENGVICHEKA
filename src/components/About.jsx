@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { profile } from '../data'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { useProfileCv } from '../hooks/useProfileCv'
-import { useIsOwner } from '../hooks/useIsOwner'
 import { useLanguage } from '../hooks/useLanguage'
 import Avatar from './Avatar'
 import ChangePhotoButton from './ChangePhotoButton'
+import ChangePhotoOverlay from './ChangePhotoOverlay'
 import ChangeCvButton from './ChangeCvButton'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
@@ -19,8 +19,8 @@ export default function About() {
   const [photoError, setPhotoError] = useState(null)
   const { photo } = useProfilePhoto()
   const { cv: uploadedCv, clear: clearCv } = useProfileCv()
-  const isOwner = useIsOwner()
   const { t } = useLanguage()
+  const photoLocked = profile.photoLocked
   const profilePhoto = photo?.url || profile.image
   const cvSource = uploadedCv?.url || profile.cv
   const cvName = uploadedCv?.name || profile.cvFileName
@@ -142,6 +142,9 @@ export default function About() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/25 to-slate-950/20" />
 
+                  {/* Change-photo overlay (hover + drag & drop) — hidden while photo is locked */}
+                  {!photoLocked && <ChangePhotoOverlay onSaved={showSaved} onError={showPhotoError} />}
+
                   {/* Availability badge */}
                   <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-slate-950/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
                     <span className="relative flex h-1.5 w-1.5">
@@ -151,9 +154,9 @@ export default function About() {
                     {t.about.openToWork}
                   </span>
 
-                  {/* Camera upload — owner only */}
-                  {isOwner && (
-                    <div className="absolute right-4 top-4">
+                  {/* Camera upload — hidden while photo is locked */}
+                  {!photoLocked && (
+                    <div className="absolute right-4 top-4 z-20">
                       <ChangePhotoButton
                         onSaved={showSaved}
                         onError={showPhotoError}
@@ -162,7 +165,7 @@ export default function About() {
                     </div>
                   )}
 
-                  {isOwner && photoError && (
+                  {!photoLocked && photoError && (
                     <p
                       role="alert"
                       className="pointer-events-none absolute right-4 top-16 max-w-[80%] rounded-full bg-rose-500/90 px-3.5 py-1.5 text-[11px] font-semibold text-white shadow-lg backdrop-blur"
@@ -253,29 +256,27 @@ export default function About() {
                     <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                       {t.about.cv}
                     </p>
-                    {isOwner && (
-                      <div className="flex items-center gap-1.5">
-                        {uploadedCv?.exists && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              clearCv()
-                              setCvError(null)
-                            }}
-                            aria-label={t.about.resetCv}
-                            title={t.about.resetCvTitle}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-400/60 hover:text-rose-500 dark:border-white/10 dark:text-slate-500 dark:hover:text-rose-400"
-                          >
-                            <Icon name="refresh" className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                        <ChangeCvButton
-                          onSaved={showCvSaved}
-                          onError={setCvError}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-500 dark:border-white/10 dark:text-slate-400 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300"
-                        />
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {uploadedCv?.exists && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            clearCv()
+                            setCvError(null)
+                          }}
+                          aria-label={t.about.resetCv}
+                          title={t.about.resetCvTitle}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-400/60 hover:text-rose-500 dark:border-white/10 dark:text-slate-500 dark:hover:text-rose-400"
+                        >
+                          <Icon name="refresh" className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      <ChangeCvButton
+                        onSaved={showCvSaved}
+                        onError={setCvError}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-500 dark:border-white/10 dark:text-slate-400 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300"
+                      />
+                    </div>
                   </div>
 
                   <p className="mt-2 flex items-center gap-1.5 truncate text-xs font-medium text-slate-500 dark:text-slate-400" title={cvName}>

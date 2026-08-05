@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { profile } from '../data'
 import { useProfileCv } from '../hooks/useProfileCv'
-import { useIsOwner } from '../hooks/useIsOwner'
 import { useLanguage } from '../hooks/useLanguage'
 import { Icon } from './Icons'
 
 /**
- * The hero "Download CV" button. Clicking it opens a small menu that lets you
- * either download the current CV or upload a new one (PDF, saved in localStorage).
+ * The hero "Download CV" button. Opens a small menu: view or download the
+ * current CV, or upload a new one (PDF). The uploaded CV is kept in this
+ * browser (localStorage) — to make it permanent for all visitors, replace
+ * public/cv.pdf with your real CV or set up Supabase (see CV_UPLOAD_SETUP.md).
  */
 export default function DownloadCvButton() {
   const { cv, updateFromFile, clear } = useProfileCv()
-  const isOwner = useIsOwner()
   const { t } = useLanguage()
   const rootRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -44,20 +44,6 @@ export default function DownloadCvButton() {
   useEffect(() => () => {
     if (noticeTimerRef.current) window.clearTimeout(noticeTimerRef.current)
   }, [])
-
-  // Visitors (no secret key in the URL) just get a plain download button.
-  if (!isOwner) {
-    return (
-      <a
-        href={cvSource}
-        download={cvName}
-        className="inline-flex items-center gap-2 rounded-xl border border-indigo-500/30 bg-indigo-500/5 px-5 py-3 text-sm font-semibold text-indigo-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-indigo-500/10 dark:text-indigo-300"
-      >
-        <Icon name="download" className="h-4 w-4" />
-        {t.cvMenu.download}
-      </a>
-    )
-  }
 
   const showNotice = (type, text) => {
     if (noticeTimerRef.current) window.clearTimeout(noticeTimerRef.current)
@@ -117,6 +103,27 @@ export default function DownloadCvButton() {
             </span>
           </p>
           <div className="p-1.5">
+            <a
+              role="menuitem"
+              href={cvSource}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-indigo-500/10 hover:text-indigo-600 dark:text-slate-200 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300"
+            >
+              <Icon name="external" className="h-4 w-4" />
+              {t.cvMenu.view}
+            </a>
+            <a
+              role="menuitem"
+              href={cvSource}
+              download={cvName}
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-indigo-500/10 hover:text-indigo-600 dark:text-slate-200 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300"
+            >
+              <Icon name="download" className="h-4 w-4" />
+              {t.cvMenu.download}
+            </a>
             <button
               type="button"
               role="menuitem"
@@ -130,16 +137,6 @@ export default function DownloadCvButton() {
               )}
               {t.cvMenu.uploadNew}
             </button>
-            <a
-              role="menuitem"
-              href={cvSource}
-              download={cvName}
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-indigo-500/10 hover:text-indigo-600 dark:text-slate-200 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-300"
-            >
-              <Icon name="download" className="h-4 w-4" />
-              {t.cvMenu.download}
-            </a>
             {cv?.exists && (
               <button
                 type="button"

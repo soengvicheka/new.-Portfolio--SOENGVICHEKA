@@ -38,6 +38,15 @@ export const profile = {
   yearsExperience: 2,
   projectsCompleted: 6,
   // happyClients: 40,
+  // -------------------------------------------------------------------------
+  //  Photo lock
+  //  ----------
+  //  Set photoLocked to true AFTER you have uploaded your photo and are happy
+  //  with it. While locked, ALL photo-change buttons (camera, hover overlay,
+  //  drag & drop) are hidden and nobody can change the photo from the site.
+  //  To change it again later, set this back to false (or ask for help).
+  // -------------------------------------------------------------------------
+  photoLocked: true,
 }
 
 export const navLinks = [

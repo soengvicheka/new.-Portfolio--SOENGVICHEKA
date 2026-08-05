@@ -1,18 +1,17 @@
 import { useState } from 'react'
 import { profile, socials } from '../data'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
-import { useIsOwner } from '../hooks/useIsOwner'
 import { useLanguage } from '../hooks/useLanguage'
 import Avatar from './Avatar'
 import ChangePhotoButton from './ChangePhotoButton'
-import DownloadCvButton from './DownloadCvButton'
+import ChangePhotoOverlay from './ChangePhotoOverlay'
 import Typewriter from './Typewriter'
 import { Icon } from './Icons'
 
 export default function Hero() {
   const { photo, clear } = useProfilePhoto()
-  const isOwner = useIsOwner()
   const { t } = useLanguage()
+  const photoLocked = profile.photoLocked
   const profilePhoto = photo?.url || profile.image
   const [flash, setFlash] = useState(false)
   const [photoError, setPhotoError] = useState(null)
@@ -105,7 +104,6 @@ export default function Hero() {
               {t.hero.letsTalk}
               <Icon name="send" className="h-4 w-4" />
             </a>
-            <DownloadCvButton />
           </div>
 
           {/* Socials + quick stats */}
@@ -168,9 +166,18 @@ export default function Hero() {
                 className="aspect-[4/4.4] w-full rounded-[1.6rem]"
               />
 
-              {/* Photo controls — owner only */}
-              {isOwner && (
-                <div className="absolute right-4 top-4 flex items-center gap-2">
+              {/* Change-photo overlay (hover + drag & drop) — hidden while photo is locked */}
+              {!photoLocked && (
+                <ChangePhotoOverlay
+                  onSaved={showSaved}
+                  onError={showPhotoError}
+                  className="inset-2 rounded-[1.6rem]"
+                />
+              )}
+
+              {/* Photo controls — hidden while photo is locked */}
+              {!photoLocked && (
+                <div className="absolute right-4 top-4 z-20 flex items-center gap-2">
                   {photo?.exists && (
                     <button
                       type="button"
@@ -191,7 +198,7 @@ export default function Hero() {
               )}
 
               {/* Helper hint / saved feedback */}
-              {isOwner && flash && (
+              {flash && (
                 <p
                   role="status"
                   className="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-slate-950/70 px-3.5 py-1.5 text-[11px] font-semibold text-white backdrop-blur"
@@ -200,7 +207,7 @@ export default function Hero() {
                   {t.hero.photoSaved}
                 </p>
               )}
-              {isOwner && photoError && (
+              {photoError && (
                 <p
                   role="alert"
                   className="pointer-events-none absolute bottom-6 left-1/2 flex max-w-[90%] -translate-x-1/2 items-center gap-1.5 rounded-full bg-rose-500/90 px-3.5 py-1.5 text-center text-[11px] font-semibold text-white shadow-lg backdrop-blur"
@@ -209,7 +216,7 @@ export default function Hero() {
                   {photoError}
                 </p>
               )}
-              {isOwner && !photo?.exists && !flash && !photoError && (
+              {!photoLocked && !photo?.exists && !flash && !photoError && (
                 <p className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-slate-950/55 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur">
                   {t.hero.cameraHint}
                 </p>
