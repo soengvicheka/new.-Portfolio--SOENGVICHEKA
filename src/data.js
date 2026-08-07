@@ -39,7 +39,7 @@ export const profile = {
   //  visitor on Vercel sees it forever (no upload/setup needed). If that file
   //  is missing, this placeholder URL below is shown instead.
   // -------------------------------------------------------------------------
-  image: 'https://i.pravatar.cc/480?img=11',
+  // image: 'https://i.pravatar.cc/480?img=11',
   cv: '/cv.pdf',
   cvFileName: 'Vicheka-Soeng-CV.pdf',
   yearsExperience: 2,
