@@ -29,6 +29,11 @@ const infoCards = [
 
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
+const buildMailtoHref = (f) =>
+  `mailto:${profile.email}?subject=${encodeURIComponent(
+    f.subject || `Message from ${f.name || 'your website'}`,
+  )}&body=${encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\n\n${f.message}`)}`
+
 export default function Contact() {
   const { t } = useLanguage()
   const [form, setForm] = useState(initialForm)
@@ -74,9 +79,8 @@ export default function Contact() {
 
     if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
       setStatus('error')
-      setErrorMessage(
-        'Telegram is not configured. Add VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID to your .env file.'
-      )
+      setErrorMessage(t.contact.telegramNotConfigured)
+      resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
       return
     }
 
@@ -206,12 +210,23 @@ export default function Contact() {
               {status === 'error' && (
                 <div
                   role="alert"
-                  className="mb-6 flex items-center gap-3 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-300"
+                  className="mb-6 flex items-start gap-3 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-300"
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500 text-white">
                     <Icon name="alert" className="h-3.5 w-3.5" />
                   </span>
-                  {errorMessage || t.contact.error}
+                  <div className="min-w-0">
+                    <p>{errorMessage || t.contact.error}</p>
+                    {(!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) && (
+                      <a
+                        href={buildMailtoHref(form)}
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-red-400/40 bg-white/60 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-white dark:bg-slate-900/60 dark:text-red-300 dark:hover:bg-slate-900"
+                      >
+                        <Icon name="mail" className="h-3.5 w-3.5" />
+                        {t.contact.sendByEmail}
+                      </a>
+                    )}
+                  </div>
                 </div>
               )}
 

@@ -76,6 +76,20 @@ function removeLocal(type) {
 const resolutionCache = {}
 
 /**
+ * Lightweight "does this local/static file exist?" probe for files committed
+ * in public/ (e.g. public/profile.jpg). Uses the same 1-byte range GET as
+ * remoteFileExists so it works on every host/edge.
+ */
+async function localFileExists(path) {
+  try {
+    const res = await fetch(path, { headers: { Range: 'bytes=0-0' } })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+/**
  * Lightweight "does this file exist?" probe. Uses a 1-byte range GET instead
  * of HEAD so it works on every CDN edge.
  */
@@ -109,12 +123,7 @@ export function resolveAsset(type) {
         }
       })
     } else {
-      const local = readLocal(type)
-      resolutionCache[type] = Promise.resolve(
-        local
-          ? { url: local, name: def.fallbackName, exists: true }
-          : { url: def.fallbackUrl, name: def.fallbackName, exists: false },
-      )
+      resolutionCache[type] = resolveLocalAsset(type, def)
     }
   }
   return resolutionCache[type]
@@ -126,6 +135,27 @@ export function resolveAsset(type) {
  * otherwise it publishes via the owner-only edge function.
  * Throws AssetError with a machine-readable code on failure.
  */
+/**
+ * Non-Supabase mode: a browser-local upload wins; otherwise prefer a file
+ * committed in public/ (e.g. public/profile.jpg) so the photo ships with the
+ * site on every host (Vercel, Netlify...); last resort is the placeholder in
+ * data.js.
+ */
+async function resolveLocalAsset(type, def) {
+  const local = readLocal(type)
+  if (local) {
+    return { url: local, name: def.fallbackName, exists: true }
+  }
+  if (type === 'photo') {
+    const fileUrl = '/profile.jpg'
+    const exists = await localFileExists(fileUrl)
+    if (exists) {
+      return { url: fileUrl, name: def.fallbackName, exists: false }
+    }
+  }
+  return { url: def.fallbackUrl, name: def.fallbackName, exists: false }
+}
+
 export async function uploadAsset(type, dataUrl) {
   if (!isSupabaseConfigured) {
     // Browser-local mode — instant, no backend needed.

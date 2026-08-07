@@ -193,6 +193,9 @@ export const translations = {
       },
       telegramWarning:
         'Telegram warning: your chat ID appears to be the bot ID. A bot cannot send messages to itself. Use a personal chat ID or a group ID where the bot is already started.',
+      telegramNotConfigured:
+        'The contact form is not set up on this deployment yet. Add VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your Vercel dashboard, or use the email button below.',
+      sendByEmail: 'Send via email instead',
     },
     footer: {
       tagline:
@@ -397,6 +400,9 @@ export const translations = {
       },
       telegramWarning:
         'ការព្រមាន Telegram៖ លេខសម្គាល់ chat របស់អ្នកហាក់ដូចជាលេខ bot។ bot មិនអាចផ្ញើសារទៅកាន់ខ្លួនឯងបានទេ។ សូមប្រើលេខ chat ផ្ទាល់ខ្លួន ឬលេខក្រុមដែល bot ត្រូវបានបន្ថែម។',
+      telegramNotConfigured:
+        'ទម្រង់ទំនាក់ទំនងមិនទាន់ត្រូវបានរៀបចំនៅលើការដាក់ពង្រាយនេះទេ។ សូមបន្ថែម VITE_TELEGRAM_BOT_TOKEN និង VITE_TELEGRAM_CHAT_ID នៅក្នុងផ្ទាំងគ្រប់គ្រង Vercel របស់អ្នក ឬប្រើប៊ូតុងអ៊ីមែលខាងក្រោម។',
+      sendByEmail: 'ផ្ញើតាមអ៊ីមែលវិញ',
     },
     footer: {
       tagline:

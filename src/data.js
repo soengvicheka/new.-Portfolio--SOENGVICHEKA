@@ -32,6 +32,13 @@ export const profile = {
   email: 'soengvicheka775@gmail.com',
   phone: '+855 67 407 884',
   availability: 'Open to freelance & full-time roles',
+  // -------------------------------------------------------------------------
+  //  Profile photo
+  //  -------------
+  //  Put your photo in public/profile.jpg and it ships with the site, so EVERY
+  //  visitor on Vercel sees it forever (no upload/setup needed). If that file
+  //  is missing, this placeholder URL below is shown instead.
+  // -------------------------------------------------------------------------
   image: 'https://i.pravatar.cc/480?img=11',
   cv: '/cv.pdf',
   cvFileName: 'Vicheka-Soeng-CV.pdf',
