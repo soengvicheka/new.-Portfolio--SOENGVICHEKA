@@ -66,7 +66,7 @@ export const navLinks = [
 ]
 
 export const socials = [
-  { name: 'LinkedIn', url: 'www.linkedin.com/in/vicheka-soeng-977453399', icon: 'linkedin' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/vicheka-soeng-977453399', icon: 'linkedin' },
 ]
 
 

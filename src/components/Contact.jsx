@@ -7,11 +7,13 @@ import { Icon } from './Icons'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+// text-base on small screens keeps inputs at >=16px so iOS Safari doesn't
+// auto-zoom the page when a field is focused (classic mobile annoyance).
 const inputClass =
-  'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500'
+  'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 sm:text-sm dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500'
 
 const errorInputClass =
-  'w-full rounded-xl border border-red-400 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/15 dark:border-red-500/60 dark:bg-white/5 dark:text-white'
+  'w-full rounded-xl border border-red-400 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/15 sm:text-sm dark:border-red-500/60 dark:bg-white/5 dark:text-white'
 
 // Local dev reads the real token from your local .env (Vite). In production the
 // token is never referenced in the browser — messages go through the

@@ -40,7 +40,7 @@ export default function Hero() {
   })
 
   return (
-    <section id="home" className="relative scroll-mt-24 overflow-hidden pb-16 pt-28 sm:pt-32 lg:pb-24">
+    <section id="home" className="relative scroll-mt-24 overflow-hidden pb-16 pt-[calc(7rem+env(safe-area-inset-top))] sm:pt-[calc(8rem+env(safe-area-inset-top))] lg:pb-24">
       {/* Background decorations */}
       <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" aria-hidden="true" />
       <div
@@ -87,19 +87,19 @@ export default function Hero() {
 
           {/* CTAs */}
           <div
-            className="mt-8 flex animate-fade-up flex-wrap items-center gap-3.5"
+            className="mt-8 flex animate-fade-up flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center"
             style={{ animationDelay: '320ms' }}
           >
             <a
               href="#projects"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40 sm:w-auto"
             >
               {t.hero.viewWork}
               <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-600 dark:border-white/15 dark:text-slate-200 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 px-6 py-3.5 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-400/60 hover:text-indigo-600 sm:w-auto dark:border-white/15 dark:text-slate-200 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300"
             >
               {t.hero.letsTalk}
               <Icon name="send" className="h-4 w-4" />
@@ -149,7 +149,7 @@ export default function Hero() {
         </div>
 
         {/* ---- Right column: profile image ---- */}
-        <div className="relative mx-auto w-full max-w-sm animate-fade-up lg:max-w-md" style={{ animationDelay: '250ms' }}>
+        <div className="relative mx-auto w-full max-w-sm animate-fade-up md:max-w-md" style={{ animationDelay: '250ms' }}>
           <div
             className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-indigo-500/20 via-transparent to-cyan-400/20 blur-2xl"
             aria-hidden="true"
@@ -238,7 +238,7 @@ export default function Hero() {
           </div>
 
           {/* Floating chips */}
-          <div className="absolute -left-6 top-10 animate-float rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-xl shadow-slate-900/5 backdrop-blur dark:border-white/10 dark:bg-slate-900/90">
+          <div className="absolute -left-2 top-10 animate-float rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-xl shadow-slate-900/5 backdrop-blur sm:-left-6 dark:border-white/10 dark:bg-slate-900/90">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500 dark:text-indigo-300">
                 <Icon name="code" className="h-5 w-5" />
@@ -250,7 +250,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="absolute -right-4 bottom-12 animate-float-slow rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-xl shadow-slate-900/5 backdrop-blur dark:border-white/10 dark:bg-slate-900/90">
+          <div className="absolute -right-2 bottom-12 animate-float-slow rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-xl shadow-slate-900/5 backdrop-blur sm:-right-4 dark:border-white/10 dark:bg-slate-900/90">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-500 dark:text-cyan-300">
                 <Icon name="briefcase" className="h-5 w-5" />

@@ -34,14 +34,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] transition-all duration-300 ${
         scrolled
           ? 'border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/80'
           : 'bg-transparent'
       }`}
     >
       <nav
-        className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8"
+        className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
         aria-label={t.nav.mainNav}
       >
         {/* Logo */}
@@ -49,7 +49,7 @@ export default function Navbar() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 font-display text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
             VS
           </span>
-          <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="hidden font-display text-lg font-bold tracking-tight text-slate-900 min-[360px]:inline dark:text-white">
             Vicheka<span className="text-gradient">.dev</span>
           </span>
         </a>
