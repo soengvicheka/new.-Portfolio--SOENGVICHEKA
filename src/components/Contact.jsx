@@ -13,10 +13,14 @@ const inputClass =
 const errorInputClass =
   'w-full rounded-xl border border-red-400 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/15 dark:border-red-500/60 dark:bg-white/5 dark:text-white'
 
-const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || ''
-const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || ''
-const TELEGRAM_BOT_ID = TELEGRAM_BOT_TOKEN.split(':')[0] || ''
-const TELEGRAM_CHAT_IS_BOT_ID = TELEGRAM_CHAT_ID && TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID
+// Local dev reads the real token from your local .env (Vite). In production the
+// token is never referenced in the browser — messages go through the
+// /api/send-telegram serverless function, so the bot token stays on the server.
+const IS_DEV = import.meta.env.DEV
+const TELEGRAM_BOT_TOKEN = IS_DEV ? import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '' : ''
+const TELEGRAM_CHAT_ID = IS_DEV ? import.meta.env.VITE_TELEGRAM_CHAT_ID || '' : ''
+const TELEGRAM_BOT_ID = IS_DEV ? TELEGRAM_BOT_TOKEN.split(':')[0] || '' : ''
+const TELEGRAM_CHAT_IS_BOT_ID = IS_DEV ? !!(TELEGRAM_CHAT_ID && TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID) : false
 
 // Use your active Telegram chat ID here, not the bot ID.
 // Example: VITE_TELEGRAM_CHAT_ID=123456789 or VITE_TELEGRAM_CHAT_ID=-1001234567890
@@ -40,6 +44,7 @@ export default function Contact() {
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | success | error
   const [errorMessage, setErrorMessage] = useState('')
+  const [canFallbackToEmail, setCanFallbackToEmail] = useState(false)
   const resetTimer = useRef(null)
 
   useEffect(() => () => clearTimeout(resetTimer.current), [])
@@ -76,44 +81,63 @@ export default function Contact() {
 
     setStatus('sending')
     setErrorMessage('')
+    setCanFallbackToEmail(false)
 
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      setStatus('error')
-      setErrorMessage(t.contact.telegramNotConfigured)
-      resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
-      return
-    }
-
-    if (TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID) {
-      setStatus('error')
-      setErrorMessage(
-        'Telegram chat ID cannot be the bot ID. Use your personal chat ID or a group ID where the bot is added.'
-      )
-      return
-    }
-
-    const text = `New contact form message from ${form.name} (${form.email})\nSubject: ${form.subject}\n\n${form.message}`
     const payload = {
-      chat_id: TELEGRAM_CHAT_ID,
-      text,
+      name: form.name.trim(),
+      email: form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
     }
 
     try {
-      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      const data = await response.json()
-      if (!data.ok) {
-        const description = data.description || 'Telegram send failed.'
-        const normalized = String(description).toLowerCase()
-        if (normalized.includes("can't send messages to the bot") || normalized.includes('bot can\'t send')) {
-          throw new Error(
-            'Telegram bot cannot send to itself. Use a real chat ID or group ID where the bot is a member.'
-          )
+      if (IS_DEV && (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID)) {
+        setStatus('error')
+        setErrorMessage(t.contact.telegramNotConfigured)
+        setCanFallbackToEmail(true)
+        resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
+        return
+      }
+
+      if (IS_DEV) {
+        // Local dev: talk to Telegram directly — the token lives in your local .env.
+        if (TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID) {
+          setStatus('error')
+          setErrorMessage(t.contact.telegramSelfSend)
+          return
         }
-        throw new Error(description)
+        const text = `New contact form message from ${payload.name} (${payload.email})\nSubject: ${payload.subject}\n\n${payload.message}`
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
+        })
+        const data = await response.json()
+        if (!data.ok) {
+          const description = String(data.description || 'Telegram send failed.').toLowerCase()
+          if (description.includes("can't send messages to the bot") || description.includes("bot can't send")) {
+            throw new Error(t.contact.telegramSelfSend)
+          }
+          throw new Error(description)
+        }
+      } else {
+        // Production: proxy through the serverless function — the bot token
+        // never ships to the browser.
+        const response = await fetch('/api/send-telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok || !data.ok) {
+          if (data.code === 'NOT_CONFIGURED') setCanFallbackToEmail(true)
+          const serverErrors = {
+            NOT_CONFIGURED: t.contact.telegramNotConfigured,
+            INVALID_TOKEN: t.contact.telegramInvalidToken,
+            BOT_SELF_SEND: t.contact.telegramSelfSend,
+          }
+          throw new Error(serverErrors[data.code] || data.error || t.contact.error)
+        }
       }
 
       setStatus('success')
@@ -121,8 +145,8 @@ export default function Contact() {
       resetTimer.current = setTimeout(() => setStatus('idle'), 6000)
     } catch (error) {
       setStatus('error')
-      setErrorMessage(error.message || 'Unable to send your message. Please try again.')
-      resetTimer.current = setTimeout(() => setStatus('idle'), 6000)
+      setErrorMessage(error.message || t.contact.error)
+      resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
     }
   }
 
@@ -217,7 +241,7 @@ export default function Contact() {
                   </span>
                   <div className="min-w-0">
                     <p>{errorMessage || t.contact.error}</p>
-                    {(!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) && (
+                    {canFallbackToEmail && (
                       <a
                         href={buildMailtoHref(form)}
                         className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-red-400/40 bg-white/60 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-white dark:bg-slate-900/60 dark:text-red-300 dark:hover:bg-slate-900"

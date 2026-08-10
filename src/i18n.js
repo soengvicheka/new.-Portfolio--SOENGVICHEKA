@@ -194,7 +194,11 @@ export const translations = {
       telegramWarning:
         'Telegram warning: your chat ID appears to be the bot ID. A bot cannot send messages to itself. Use a personal chat ID or a group ID where the bot is already started.',
       telegramNotConfigured:
-        'The contact form is not set up on this deployment yet. Add VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your Vercel dashboard, or use the email button below.',
+        'The contact form is not set up on this deployment yet. Add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in Vercel → Settings → Environment Variables, then redeploy, or use the email button below.',
+      telegramInvalidToken:
+        'Telegram rejected the bot token. Check the TELEGRAM_BOT_TOKEN value in your Vercel environment variables.',
+      telegramSelfSend:
+        'Telegram bot cannot send to itself. Use your personal chat ID or a group ID where the bot is a member — not the bot ID.',
       sendByEmail: 'Send via email instead',
     },
     footer: {
@@ -401,7 +405,11 @@ export const translations = {
       telegramWarning:
         'ការព្រមាន Telegram៖ លេខសម្គាល់ chat របស់អ្នកហាក់ដូចជាលេខ bot។ bot មិនអាចផ្ញើសារទៅកាន់ខ្លួនឯងបានទេ។ សូមប្រើលេខ chat ផ្ទាល់ខ្លួន ឬលេខក្រុមដែល bot ត្រូវបានបន្ថែម។',
       telegramNotConfigured:
-        'ទម្រង់ទំនាក់ទំនងមិនទាន់ត្រូវបានរៀបចំនៅលើការដាក់ពង្រាយនេះទេ។ សូមបន្ថែម VITE_TELEGRAM_BOT_TOKEN និង VITE_TELEGRAM_CHAT_ID នៅក្នុងផ្ទាំងគ្រប់គ្រង Vercel របស់អ្នក ឬប្រើប៊ូតុងអ៊ីមែលខាងក្រោម។',
+        'ទម្រង់ទំនាក់ទំនងមិនទាន់ត្រូវបានរៀបចំនៅលើការដាក់ពង្រាយនេះទេ។ សូមបន្ថែម TELEGRAM_BOT_TOKEN និង TELEGRAM_CHAT_ID នៅក្នុង Vercel → Settings → Environment Variables រួច redeploy ឡើងវិញ ឬប្រើប៊ូតុងអ៊ីមែលខាងក្រោម។',
+      telegramInvalidToken:
+        'Telegram បានបដិសេធ bot token។ សូមពិនិត្យតម្លៃ TELEGRAM_BOT_TOKEN នៅក្នុង environment variables របស់ Vercel។',
+      telegramSelfSend:
+        'Telegram bot មិនអាចផ្ញើសារទៅកាន់ខ្លួនឯងបានទេ។ សូមប្រើលេខ chat ផ្ទាល់ខ្លួន ឬលេខក្រុមដែល bot ជាសមាជិក — មិនមែនលេខ bot ទេ។',
       sendByEmail: 'ផ្ញើតាមអ៊ីមែលវិញ',
     },
     footer: {
