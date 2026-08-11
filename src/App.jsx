@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
 import Skills from './components/Skills'
+import Education from './components/Education'
 import Projects from './components/Projects'
 import Process from './components/Process'
 import Contact from './components/Contact'
@@ -22,6 +23,7 @@ export default function App() {
               <Hero />
               <About />
               <Skills />
+              <Education />
               <Projects />
               <Process />
               <Contact />

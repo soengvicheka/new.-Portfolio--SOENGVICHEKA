@@ -10,6 +10,7 @@ export const translations = {
       home: 'Home',
       about: 'About',
       skills: 'Skills',
+      education: 'Education',
       projects: 'Projects',
       process: 'Process',
       contact: 'Contact',
@@ -109,6 +110,14 @@ export const translations = {
       reset: 'Reset to default CV',
       saved: 'CV saved — downloads now use your file.',
       resetMsg: 'Back to the default CV.',
+    },
+    education: {
+      eyebrow: 'Education',
+      title: { before: 'My ', highlight: 'education' },
+      description:
+        'The academic milestones that shaped my foundation and set me on the path to becoming a developer.',
+      degrees: ['Associate Degree in Web Development', 'High School Diploma'],
+      schools: ['Passerelles Numériques Cambodia (PNC)', 'Triel High School'],
     },
     skills: {
       eyebrow: 'My Skills',
@@ -221,6 +230,7 @@ export const translations = {
       home: 'ទំព័រដើម',
       about: 'អំពីខ្ញុំ',
       skills: 'ជំនាញ',
+      education: 'ការអប់រំ',
       projects: 'គម្រោង',
       process: 'ដំណើរការ',
       contact: 'ទំនាក់ទំនង',
@@ -320,6 +330,14 @@ export const translations = {
       reset: 'កំណត់ត្រឡប់ទៅ CV ដើមវិញ',
       saved: 'រក្សាទុក CV ហើយ — ការទាញយកនឹងប្រើឯកសាររបស់អ្នក។',
       resetMsg: 'ត្រឡប់ទៅកាន់ CV ដើមវិញ។',
+    },
+    education: {
+      eyebrow: 'ការអប់រំ',
+      title: { before: 'ដំណើរការសិក្សា', highlight: 'របស់ខ្ញុំ' },
+      description:
+        'សមិទ្ធផលសិក្សាដែលបានកសាងគ្រឹះរបស់ខ្ញុំ និងនាំខ្ញុំឆ្ពោះទៅរកអាជីពអ្នកអភិវឌ្ឍន៍។',
+      degrees: ['សញ្ញាបត្ររងផ្នែកអភិវឌ្ឍន៍វេប', 'សញ្ញាបត្រមធ្យមសិក្សាទុតិយភូមិ'],
+      schools: ['Passerelles Numériques Cambodia (PNC)', 'វិទ្យាល័យ Triel'],
     },
     skills: {
       eyebrow: 'ជំនាញរបស់ខ្ញុំ',

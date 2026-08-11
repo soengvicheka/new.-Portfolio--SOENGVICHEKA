@@ -19,7 +19,7 @@ export default function Footer() {
                 VS
               </span>
               <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-                Vicheka<span className="text-gradient">.dev</span>
+                SOENG Vicheka<span className="text-gradient">.DEV</span>
               </span>
             </a>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600 dark:text-slate-400">

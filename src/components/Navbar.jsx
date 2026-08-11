@@ -49,8 +49,8 @@ export default function Navbar() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 font-display text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
             VS
           </span>
-          <span className="hidden font-display text-lg font-bold tracking-tight text-slate-900 min-[360px]:inline dark:text-white">
-            Vicheka<span className="text-gradient">.dev</span>
+          <span className="hidden font-display text-lg font-bold tracking-tight text-slate-900 min-[420px]:inline dark:text-white">
+            SOENG Vicheka<span className="text-gradient">.DEV</span>
           </span>
         </a>
 
@@ -120,7 +120,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div
         className={`overflow-hidden border-slate-200/70 bg-white/95 backdrop-blur-xl transition-all duration-300 dark:border-white/10 dark:bg-slate-950/95 lg:hidden ${
-          open ? 'max-h-[420px] border-b' : 'max-h-0'
+          open ? 'max-h-[480px] border-b' : 'max-h-0'
         }`}
       >
         <ul className="space-y-1 px-6 py-4">

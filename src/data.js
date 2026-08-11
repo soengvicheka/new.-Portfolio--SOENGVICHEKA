@@ -60,6 +60,7 @@ export const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Education', href: '#education' },
   { label: 'Projects', href: '#projects' },
   { label: 'Process', href: '#process' },
   { label: 'Contact', href: '#contact' },
@@ -67,6 +68,7 @@ export const navLinks = [
 
 export const socials = [
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/vicheka-soeng-977453399', icon: 'linkedin' },
+  { name: 'Telegram', url: 'https://t.me/vichh_s', icon: 'telegram' },
 ]
 
 
@@ -92,6 +94,19 @@ export const softSkills = [
   { name: 'Adaptability', icon: 'refresh' },
   { name: 'Communication', icon: 'message' },
   { name: 'Time / Task Management', icon: 'clock' },
+]
+
+export const education = [
+  {
+    year: '2026',
+    degree: 'Associate Degree in Web Development',
+    school: 'Passerelles Numériques Cambodia (PNC)',
+  },
+  {
+    year: '2024',
+    degree: 'High School Diploma',
+    school: 'Triel High School',
+  },
 ]
 
 export const projects = [
