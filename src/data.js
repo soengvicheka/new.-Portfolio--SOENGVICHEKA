@@ -112,6 +112,8 @@ export const education = [
 export const projects = [
   {
     title: 'Student News (Blog Website)',
+    // type: 'Personal Project' | 'School Project'
+    type: 'School Project',
     description:
       'A blog website for students to share their thoughts, ideas and experiences.',
     stack: ['HTML', 'CSS', 'JavaScript'],
@@ -121,6 +123,7 @@ export const projects = [
   },
   {
     title: 'Weather App System',
+    type: 'School Project',
     description:
       'A weather app system that provides real-time weather information for any location.',
     stack: ['HTML', 'CSS', 'JavaScript'],
@@ -130,6 +133,7 @@ export const projects = [
   },
   {
     title: 'PNC education system',
+    type: 'School Project',
     description:
       'The PNC Education System is an internal web-based application that helps the Education Team manage the entire student lifecycle in one centralized platform, including enrollment, student profiles, ID card issuance, record management, and self-evaluation.',
     stack: ['Laravel', 'Vue.js', 'MySql'],
@@ -139,6 +143,7 @@ export const projects = [
   },
   {
     title: 'The The-Skincare-E-commerce',
+    type: 'Personal Project',
     description:
       'The The-Skincare-E-commerce is an online skincare store that offers a wide range of skincare products for all skin types.',
     stack: ['React', 'Tailwind'],

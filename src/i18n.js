@@ -141,6 +141,10 @@ export const translations = {
       screenshotOf: 'Screenshot of',
       onGithub: 'on GitHub',
       liveDemoOf: 'Live demo of',
+      types: {
+        'Personal Project': 'Personal Project',
+        'School Project': 'School Project',
+      },
       titles: [
         'Student News (Blog Website)',
         'Weather App System',
@@ -361,6 +365,10 @@ export const translations = {
       screenshotOf: 'រូបថតអេក្រង់របស់',
       onGithub: 'នៅលើ GitHub',
       liveDemoOf: 'សាកល្បងមើលផ្ទាល់របស់',
+      types: {
+        'Personal Project': 'គម្រោងផ្ទាល់ខ្លួន',
+        'School Project': 'គម្រោងសាលា',
+      },
       titles: [
         'កាសែតនិស្សិត (គេហទំព័រប្លុក)',
         'ប្រព័ន្ធកម្មវិធីអាកាសធាតុ',

@@ -4,6 +4,32 @@ import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 import { Icon } from './Icons'
 
+// ---------------------------------------------------------------------------
+//  Project type badge
+//  ------------------
+//  Driven entirely by the `type` value on each project in src/data.js — set
+//  `type: 'Personal Project' | 'School Project'` there and the badge updates
+//  automatically. Unknown values fall back to a neutral style.
+// ---------------------------------------------------------------------------
+const PROJECT_TYPE_STYLES = {
+  'Personal Project': {
+    icon: '👤',
+    className:
+      'bg-sky-50 text-sky-700 ring-sky-600/10 dark:bg-sky-500/10 dark:text-sky-300 dark:ring-sky-400/25',
+  },
+  'School Project': {
+    icon: '🎓',
+    className:
+      'bg-violet-50 text-violet-700 ring-violet-600/10 dark:bg-violet-500/10 dark:text-violet-300 dark:ring-violet-400/25',
+  },
+}
+
+const DEFAULT_PROJECT_TYPE_STYLE = {
+  icon: '🏷️',
+  className:
+    'bg-slate-100 text-slate-700 ring-slate-600/10 dark:bg-white/10 dark:text-slate-300 dark:ring-white/20',
+}
+
 export default function Projects() {
   const { t, isKm } = useLanguage()
 
@@ -28,7 +54,9 @@ export default function Projects() {
         />
 
         <div className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {visibleProjects.map((project, index) => (
+          {visibleProjects.map((project, index) => {
+            const typeStyle = PROJECT_TYPE_STYLES[project.type] ?? DEFAULT_PROJECT_TYPE_STYLE
+            return (
             <Reveal key={project.title} delay={(index % 3) * 90}>
               <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-500/10 dark:border-white/10 dark:bg-slate-900">
                 {/* Image */}
@@ -73,6 +101,18 @@ export default function Projects() {
                   <h3 className="font-display text-lg font-bold text-slate-900 transition-colors group-hover:text-indigo-500 dark:text-white dark:group-hover:text-indigo-300">
                     {project.title}
                   </h3>
+
+                  {project.type && (
+                    <span
+                      className={`mt-2 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold leading-none ring-1 ring-inset ${typeStyle.className}`}
+                    >
+                      <span aria-hidden="true" className="text-xs leading-none">
+                        {typeStyle.icon}
+                      </span>
+                      {t.projects.types?.[project.type] ?? project.type}
+                    </span>
+                  )}
+
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     {project.description}
                   </p>
@@ -90,7 +130,8 @@ export default function Projects() {
                 </div>
               </article>
             </Reveal>
-          ))}
+            )
+          })}
         </div>
 
         <Reveal delay={120} className="mt-12 text-center">
