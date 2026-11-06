@@ -83,7 +83,7 @@ export default function Navbar() {
             onClick={toggleLang}
             aria-label={t.nav.switchLang}
             title={t.nav.switchLang}
-            className="flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 font-display text-sm font-bold text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
+            className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 font-display text-sm font-bold text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
           >
             {lang === 'en' ? 'EN' : 'ខ្មែរ'}
           </button>
@@ -92,7 +92,7 @@ export default function Navbar() {
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? t.nav.switchThemeLight : t.nav.switchTheme}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all duration-200 hover:border-indigo-400/50 hover:text-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-cyan-300"
           >
             {theme === 'dark' ? <Icon name="sun" className="h-[18px] w-[18px]" /> : <Icon name="moon" className="h-[18px] w-[18px]" />}
           </button>
@@ -110,7 +110,7 @@ export default function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
             aria-expanded={open}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 lg:hidden"
           >
             {open ? <Icon name="close" /> : <Icon name="menu" />}
           </button>
@@ -129,7 +129,7 @@ export default function Navbar() {
               <a
                 href={link.href}
                 onClick={handleNavClick}
-                className={`block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`block rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
                   active === link.href
                     ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-300'
                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5'

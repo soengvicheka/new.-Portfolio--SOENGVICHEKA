@@ -122,7 +122,7 @@ export default function Hero() {
                     rel="noopener noreferrer"
                     aria-label={s.name}
                     title={s.name}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400/60 hover:text-indigo-500 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:text-slate-400 dark:hover:text-cyan-300"
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400/60 hover:text-indigo-500 hover:shadow-lg hover:shadow-indigo-500/10 dark:border-white/10 dark:text-slate-400 dark:hover:text-cyan-300"
                   >
                     <Icon name={s.icon} className="h-[18px] w-[18px]" />
                   </a>

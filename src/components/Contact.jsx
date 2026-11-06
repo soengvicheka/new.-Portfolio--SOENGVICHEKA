@@ -1,156 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
-import { profile, socials } from '../data'
 import { useLanguage } from '../hooks/useLanguage'
+import { profile, socials } from '../data'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 import { Icon } from './Icons'
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-// text-base on small screens keeps inputs at >=16px so iOS Safari doesn't
-// auto-zoom the page when a field is focused (classic mobile annoyance).
-const inputClass =
-  'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 sm:text-sm dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500'
-
-const errorInputClass =
-  'w-full rounded-xl border border-red-400 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/15 sm:text-sm dark:border-red-500/60 dark:bg-white/5 dark:text-white'
-
-// Local dev reads the real token from your local .env (Vite). In production the
-// token is never referenced in the browser — messages go through the
-// /api/send-telegram serverless function, so the bot token stays on the server.
-const IS_DEV = import.meta.env.DEV
-const TELEGRAM_BOT_TOKEN = IS_DEV ? import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '' : ''
-const TELEGRAM_CHAT_ID = IS_DEV ? import.meta.env.VITE_TELEGRAM_CHAT_ID || '' : ''
-const TELEGRAM_BOT_ID = IS_DEV ? TELEGRAM_BOT_TOKEN.split(':')[0] || '' : ''
-const TELEGRAM_CHAT_IS_BOT_ID = IS_DEV ? !!(TELEGRAM_CHAT_ID && TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID) : false
-
-// Use your active Telegram chat ID here, not the bot ID.
-// Example: VITE_TELEGRAM_CHAT_ID=123456789 or VITE_TELEGRAM_CHAT_ID=-1001234567890
-// The bot must already be started in that chat or group.
 const infoCards = [
   { icon: 'mail', labelKey: 'email', value: profile.email, href: `mailto:${profile.email}` },
   { icon: 'phone', labelKey: 'phone', value: profile.phone, href: `tel:${profile.phone.replace(/\s/g, '')}` },
   { icon: 'location', labelKey: 'location', value: profile.location },
 ]
 
-const initialForm = { name: '', email: '', subject: '', message: '' }
-
-const buildMailtoHref = (f) =>
-  `mailto:${profile.email}?subject=${encodeURIComponent(
-    f.subject || `Message from ${f.name || 'your website'}`,
-  )}&body=${encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\n\n${f.message}`)}`
-
 export default function Contact() {
   const { t } = useLanguage()
-  const [form, setForm] = useState(initialForm)
-  const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState('idle') // idle | sending | success | error
-  const [errorMessage, setErrorMessage] = useState('')
-  const [canFallbackToEmail, setCanFallbackToEmail] = useState(false)
-  const resetTimer = useRef(null)
-
-  useEffect(() => () => clearTimeout(resetTimer.current), [])
-
-  const validate = (values) => {
-    const next = {}
-    if (!values.name.trim()) next.name = t.contact.validation.name
-    if (!values.email.trim()) {
-      next.email = t.contact.validation.email
-    } else if (!EMAIL_REGEX.test(values.email.trim())) {
-      next.email = t.contact.validation.emailValid
-    }
-    if (!values.subject.trim()) next.subject = t.contact.validation.subject
-    if (!values.message.trim()) next.message = t.contact.validation.message
-    else if (values.message.trim().length < 10) next.message = t.contact.validation.messageShort
-    return next
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    const next = { ...form, [name]: value }
-    setForm(next)
-    if (errors[name]) {
-      const nextErrors = validate(next)
-      setErrors(nextErrors)
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const nextErrors = validate(form)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-
-    setStatus('sending')
-    setErrorMessage('')
-    setCanFallbackToEmail(false)
-
-    const payload = {
-      name: form.name.trim(),
-      email: form.email.trim(),
-      subject: form.subject.trim(),
-      message: form.message.trim(),
-    }
-
-    try {
-      if (IS_DEV && (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID)) {
-        setStatus('error')
-        setErrorMessage(t.contact.telegramNotConfigured)
-        setCanFallbackToEmail(true)
-        resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
-        return
-      }
-
-      if (IS_DEV) {
-        // Local dev: talk to Telegram directly — the token lives in your local .env.
-        if (TELEGRAM_CHAT_ID === TELEGRAM_BOT_ID) {
-          setStatus('error')
-          setErrorMessage(t.contact.telegramSelfSend)
-          return
-        }
-        const text = `New contact form message from ${payload.name} (${payload.email})\nSubject: ${payload.subject}\n\n${payload.message}`
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
-        })
-        const data = await response.json()
-        if (!data.ok) {
-          const description = String(data.description || 'Telegram send failed.').toLowerCase()
-          if (description.includes("can't send messages to the bot") || description.includes("bot can't send")) {
-            throw new Error(t.contact.telegramSelfSend)
-          }
-          throw new Error(description)
-        }
-      } else {
-        // Production: proxy through the serverless function — the bot token
-        // never ships to the browser.
-        const response = await fetch('/api/send-telegram', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        })
-        const data = await response.json().catch(() => ({}))
-        if (!response.ok || !data.ok) {
-          if (data.code === 'NOT_CONFIGURED') setCanFallbackToEmail(true)
-          const serverErrors = {
-            NOT_CONFIGURED: t.contact.telegramNotConfigured,
-            INVALID_TOKEN: t.contact.telegramInvalidToken,
-            BOT_SELF_SEND: t.contact.telegramSelfSend,
-          }
-          throw new Error(serverErrors[data.code] || data.error || t.contact.error)
-        }
-      }
-
-      setStatus('success')
-      setForm(initialForm)
-      resetTimer.current = setTimeout(() => setStatus('idle'), 6000)
-    } catch (error) {
-      setStatus('error')
-      setErrorMessage(error.message || t.contact.error)
-      resetTimer.current = setTimeout(() => setStatus('idle'), 12000)
-    }
-  }
 
   return (
     <section id="contact" className="scroll-mt-24 py-20 sm:py-24">
@@ -166,9 +27,8 @@ export default function Contact() {
           description={t.contact.description}
         />
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-5">
-          {/* Info */}
-          <div className="space-y-5 lg:col-span-2">
+        <div className="mx-auto mt-14 max-w-2xl">
+          <div className="space-y-5">
             {infoCards.map((card, i) => (
               <Reveal key={card.labelKey} delay={i * 90}>
                 <a
@@ -210,141 +70,6 @@ export default function Contact() {
             </Reveal>
           </div>
 
-          {/* Form */}
-          <Reveal delay={120} className="lg:col-span-3">
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8 dark:border-white/10 dark:bg-slate-900"
-            >
-              {TELEGRAM_CHAT_IS_BOT_ID && (
-                <div className="mb-6 rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm font-medium text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-                  {t.contact.telegramWarning}
-                </div>
-              )}
-              {status === 'success' && (
-                <div
-                  role="status"
-                  className="mb-6 flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400"
-                >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
-                    <Icon name="check" className="h-3.5 w-3.5" />
-                  </span>
-                  {t.contact.success}
-                </div>
-              )}
-              {status === 'error' && (
-                <div
-                  role="alert"
-                  className="mb-6 flex items-start gap-3 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-300"
-                >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500 text-white">
-                    <Icon name="alert" className="h-3.5 w-3.5" />
-                  </span>
-                  <div className="min-w-0">
-                    <p>{errorMessage || t.contact.error}</p>
-                    {canFallbackToEmail && (
-                      <a
-                        href={buildMailtoHref(form)}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-red-400/40 bg-white/60 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-white dark:bg-slate-900/60 dark:text-red-300 dark:hover:bg-slate-900"
-                      >
-                        <Icon name="mail" className="h-3.5 w-3.5" />
-                        {t.contact.sendByEmail}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    {t.contact.name}
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    placeholder={t.contact.namePlaceholder}
-                    value={form.name}
-                    onChange={handleChange}
-                    className={errors.name ? errorInputClass : inputClass}
-                  />
-                  {errors.name && <p className="mt-1.5 text-xs font-medium text-red-500">{errors.name}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    {t.contact.email}
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder={t.contact.emailPlaceholder}
-                    value={form.email}
-                    onChange={handleChange}
-                    className={errors.email ? errorInputClass : inputClass}
-                  />
-                  {errors.email && <p className="mt-1.5 text-xs font-medium text-red-500">{errors.email}</p>}
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <label htmlFor="subject" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  {t.contact.subject}
-                </label>
-                <input
-                  id="subject"
-                  name="subject"
-                  type="text"
-                  placeholder={t.contact.subjectPlaceholder}
-                  value={form.subject}
-                  onChange={handleChange}
-                  className={errors.subject ? errorInputClass : inputClass}
-                />
-                {errors.subject && <p className="mt-1.5 text-xs font-medium text-red-500">{errors.subject}</p>}
-              </div>
-
-              <div className="mt-5">
-                <label htmlFor="message" className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  {t.contact.message}
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={5}
-                  placeholder={t.contact.messagePlaceholder}
-                  value={form.message}
-                  onChange={handleChange}
-                  className={`${errors.message ? errorInputClass : inputClass} resize-none`}
-                />
-                {errors.message && <p className="mt-1.5 text-xs font-medium text-red-500">{errors.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                disabled={status === 'sending'}
-                className="group mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/35 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
-              >
-                {status === 'sending' ? (
-                  <>
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                    {t.contact.sending}
-                  </>
-                ) : (
-                  <>
-                    {t.contact.send}
-                    <Icon name="send" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
-                  </>
-                )}
-              </button>
-
-              <p className="mt-4 text-xs text-slate-400 dark:text-slate-500">
-                {t.contact.replyNote}
-              </p>
-            </form>
-          </Reveal>
         </div>
       </div>
     </section>
